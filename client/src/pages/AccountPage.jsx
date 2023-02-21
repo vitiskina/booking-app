@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
-import { Link, Navigate, redirect, useParams } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import axios from "axios";
 
 const AccountPage = () => {
+  const [redirect, setRedirect] = useState(null);
   const { ready, user, setUser, setReady } = useContext(UserContext);
-  //const [redirect, setRedirect] = useState(null);
 
   let { subpage } = useParams();
 
@@ -15,15 +15,15 @@ const AccountPage = () => {
   //   console.log(subpage);
   async function logout() {
     await axios.post("/logout");
-
-     setUser(null);
+    setRedirect("/");
+    setUser(null);
   }
 
   if (!ready) {
     return <div>Loading...</div>;
   }
-  console.log(redirect);
-  if (ready && !user) {
+
+  if (ready && !user && !redirect) {
     return <Navigate to={"/login"} />;
   }
   //   console.log(ready, user);
@@ -32,13 +32,13 @@ const AccountPage = () => {
     if (type === subpage) {
       classes += " bg-primary text-white rounded-full";
     }
-
     return classes;
   }
 
-  //   if (redirect) {
-  //     return <Navigate to={redirect} />;
-  //   }
+  if (redirect) {
+    return <Navigate to={redirect} />;
+  }
+
   return (
     <div>
       <nav className=" w-full flex justify-center mt-4 mb-8 gap-4">
