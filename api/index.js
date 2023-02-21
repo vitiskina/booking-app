@@ -7,6 +7,7 @@ const User = require("./models/User.js");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
+mongoose.set("strictQuery", true);
 
 //pass db: p3KATG2BdoB9SfJq
 
@@ -77,12 +78,16 @@ app.get("/profile", (req, res) => {
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const {name,email,_id} = await User.findById(userData.id);
-      res.json({name,email,_id});
+      const { name, email, _id } = await User.findById(userData.id);
+      res.json({ name, email, _id });
     });
   } else {
-    res.json("not logged in");
+    res.json(false);
   }
+});
+
+app.post("/logout", (req, res) => {
+  res.cookie("token", "").json(true);
 });
 
 app.listen(4000);
