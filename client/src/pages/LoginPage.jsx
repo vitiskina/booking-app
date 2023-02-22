@@ -23,7 +23,7 @@ const LoginPage = () => {
   }
 
   if (redirect) return <Navigate to="/" />;
-  console.log({ email, password });
+  // console.log({ email, password });
 
   return (
     <div className="mt-4 grow flex items-center justify-around">
