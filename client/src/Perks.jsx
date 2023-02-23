@@ -1,11 +1,20 @@
 import React from "react";
 
-const Perks = ({selected, onChange}) => {
+const Perks = ({ selected, onChange }) => {
+  function handleCbClick(e) {
+    const {checked, name} = e.target;
+    if(checked){
+      onChange([...selected, name])
+    } else{
+      onChange([...selected.filter((item) => item !== name)])
+    }
+    
+  }
   return (
     <>
       {/* Wifi perk */}
       <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer ">
-        <input type="checkbox" />
+        <input type="checkbox" name="wifi" onChange={handleCbClick} />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -26,7 +35,7 @@ const Perks = ({selected, onChange}) => {
       {/* Free parking spot  */}
 
       <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer ">
-        <input type="checkbox" />
+        <input type="checkbox" name="parking"  onChange={handleCbClick} />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -48,7 +57,7 @@ const Perks = ({selected, onChange}) => {
       {/* TV */}
 
       <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer ">
-        <input type="checkbox" />
+        <input type="checkbox"name="tv"  onChange={handleCbClick}/>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -69,7 +78,7 @@ const Perks = ({selected, onChange}) => {
       {/* Radio */}
 
       <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer ">
-        <input type="checkbox" />
+        <input type="checkbox" name="radio" onChange={handleCbClick}/>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -91,7 +100,7 @@ const Perks = ({selected, onChange}) => {
       {/* Pets */}
 
       <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer ">
-        <input type="checkbox" />
+        <input type="checkbox" name="pets"  onChange={handleCbClick}/>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -113,7 +122,7 @@ const Perks = ({selected, onChange}) => {
       {/* Private entrance */}
 
       <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer ">
-        <input type="checkbox" />
+        <input type="checkbox" name="entrance" onChange={handleCbClick}/>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

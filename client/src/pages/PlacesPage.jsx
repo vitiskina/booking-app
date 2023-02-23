@@ -45,6 +45,26 @@ const PlacesPage = () => {
     setPhotoLink("");
   }
 
+  function uploadPhoto(e) {
+    const files = e.target.files;
+    const data = new FormData();
+    for (let i = 0; i < files.length; i++) {
+
+      data.append("photos", files[i]);
+    }
+
+    axios
+      .post("/upload", data, {
+        headers: { "Content-type": "multipart/form-data" },
+      })
+      .then((res) => {
+        const { data: filenames } = res;
+        setAddedPhotos((prev) => {
+          return [...prev, ...filenames];
+        });
+      });
+  }
+
   return (
     <div>
       {action !== "new" && (
@@ -124,10 +144,22 @@ const PlacesPage = () => {
             {/* photo by add file*/}
 
             <div className="mt-2 gap-2 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-              <button
-                className="flex gap-1 items-center justify-center border 
-            bg-transparent rounded-2xl p-2 text-2xl text-gray-800"
+              {addedPhotos.length > 0 &&
+                addedPhotos.map((photo) => (
+                  <div>
+                    <img
+                      className=" object-cover rounded-2xl w-full h-36 "
+                      src={"http://localhost:4000/uploads/" + photo}
+                      alt=""
+                    />
+                  </div>
+                ))}
+
+              <label
+                className="flex gap-1 h-36 cursor-pointer items-center justify-center border 
+                first-letter: bg-transparent rounded-2xl p-2 text-2xl text-gray-800"
               >
+                <input type="file" multiple className="hidden" onChange={uploadPhoto} />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -143,17 +175,7 @@ const PlacesPage = () => {
                   />
                 </svg>
                 Upload
-              </button>
-              {addedPhotos.length > 0 &&
-                addedPhotos.map((photo) => (
-                  <div>
-                    <img
-                      className=" rounded-2xl"
-                      src={"http://localhost:4000/uploads/" + photo}
-                      alt=""
-                    />
-                  </div>
-                ))}
+              </label>
             </div>
 
             {/* Description */}
