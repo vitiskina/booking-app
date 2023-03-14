@@ -14,8 +14,6 @@ const BookingsPage = () => {
     });
   }, []);
 
-  let totalNights = false;
-
   return (
     <div>
       <AccountNav />
