@@ -248,7 +248,21 @@ app.get("/bookings", async (req, res) => {
   res.json(await Booking.find({ user: userData.id }).populate("place"));
 });
 
-//search
-// res.json(await Place.find({ title: /lai/i }, 'title address'))
+app.post("/search", async (req, res) => {
+  const { searchInfo } = req.body;
+
+  const searchParam = searchInfo;
+  if(searchParam !== "") {
+    const searchQuery = await Place.find({
+      title: new RegExp(searchParam, "i"),
+    });
+    // console.log(searchQuery);
+    res.json(searchQuery);
+  } else {
+    res.json([]);
+  }
+  
+});
+
 
 app.listen(4000);

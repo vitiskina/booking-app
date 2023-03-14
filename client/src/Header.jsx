@@ -1,13 +1,25 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 
 const Header = () => {
-  const { user } = useContext(UserContext);
+  const { user, searchInfo, setSearchInfo } = useContext(UserContext);
+  //   const {  } = useContext(UserContext);
+
+  //
+  function search() {
+    axios
+      .post("/search", { searchInfo })
+      .then(({ data }) => setSearchResults(data));
+  }
+  //
+  // console.log(redirect)
+
   return (
     <header className=" flex  justify-between">
       {/* logo */}
-      <Link to={'/'} className="flex items-center gap-1">
+      <Link to={"/"} className="flex items-center gap-1">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -27,28 +39,34 @@ const Header = () => {
       {/* search */}
 
       <div className="flex gap-2 border border-gray-300 rounded-full py-2 px-4 shadow-md shadow-gray-300">
-        <div>Anywhere</div>
-        <div className="border-l border-gray-300"></div>
-        <div>Any week</div>
-        <div className="border-l border-gray-300"></div>
-        <div>Add guests</div>
-
-        <button className="bg-primary text-white p-1 rounded-full">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-4 h-4"
+        <input
+          value={searchInfo}
+          onChange={(e) => setSearchInfo(e.target.value)}
+          className="focus:outline-none border-transparent w-0 h-0"
+          type="text"
+        />
+        <Link to="/search">
+          {" "}
+          <button
+            onClick={search}
+            className="bg-primary text-white p-1 rounded-full"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-            />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-4 h-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+              />
+            </svg>
+          </button>
+        </Link>
       </div>
 
       {/* user */}

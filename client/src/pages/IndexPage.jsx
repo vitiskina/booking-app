@@ -1,11 +1,17 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "../Header";
+import { UserContext } from "../UserContext";
 
 const IndexPage = () => {
   const [places, setPlaces] = useState([]);
 
+  const {setSearchInfo} = useContext(UserContext);
+ 
+  
+ 
+  
   useEffect(() => {
     axios.get("/places").then((res) => {
       setPlaces(res.data);
