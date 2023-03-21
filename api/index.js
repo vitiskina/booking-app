@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/User.js");
 const Place = require("./models/Place.js");
 const Booking = require("./models/Booking.js");
+const Message = require("./models/Message.js");
 const cookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
 const multer = require("multer");
@@ -14,6 +15,14 @@ const fs = require("fs");
 require("dotenv").config();
 const app = express();
 mongoose.set("strictQuery", true);
+
+var http = require("http");
+const httpSer = http.createServer(app);
+const socketIo = require("socket.io")(httpSer, {
+  cors: {
+    origin: "*",
+  },
+});
 
 //pass db: p3KATG2BdoB9SfJq
 
@@ -26,7 +35,11 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(
   cors({
     credentials: true,
-    origin: ["http://127.0.0.1:5173", "http://otherdomain.com"],
+    origin: [
+      "http://127.0.0.1:5173",
+      "http://localhost:5173",
+      "http://otherdomain.com",
+    ],
   })
 );
 
@@ -252,7 +265,7 @@ app.post("/search", async (req, res) => {
   const { searchInfo } = req.body;
 
   const searchParam = searchInfo;
-  if(searchParam !== "") {
+  if (searchParam !== "") {
     const searchQuery = await Place.find({
       title: new RegExp(searchParam, "i"),
     });
@@ -261,8 +274,55 @@ app.post("/search", async (req, res) => {
   } else {
     res.json([]);
   }
-  
+});
+
+app.post("/messages", async (req, res) => {
+  const userData = await getUserDataFromReq(req);
+  const { message, receiver, sender } = req.body;
+  console.log(message, receiver, sender)
+  Message.create({
+    content: message,
+    sender: userData.id,
+    receiver,
+  })
+    .then((doc) => {
+      res.json(doc);
+    })
+    .catch((err) => {
+      throw err;
+    });
 });
 
 
-app.listen(4000);
+app.get("/messages/:id", async (req, res) => {
+  const userData = await getUserDataFromReq(req);
+  const { id } = req.params;
+
+  Message.find({
+    $or: [
+      { sender: userData.id, receiver: id },
+      { sender: id, receiver: userData.id },
+    ],
+  })
+    .populate("sender", "name")
+    .populate("receiver", "name")
+    .then((doc) => {
+      res.json(doc);
+    });
+});
+
+socketIo.on("connection", (socket) => {
+  ///Handle khi có connect từ client tới
+  console.log("New client connected" + socket.id);
+
+  socket.on("sendDataClient", function (data) {
+    // Handle khi có sự kiện tên là sendDataClient từ phía client
+    socketIo.emit("sendDataServer", { data }); // phát sự kiện  có tên sendDataServer cùng với dữ liệu tin nhắn từ phía server
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected"); // Khi client disconnect thì log ra terminal.
+  });
+});
+
+httpSer.listen(4000);

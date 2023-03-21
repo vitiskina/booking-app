@@ -4,7 +4,7 @@ import { UserContext } from "../UserContext";
 import axios from "axios";
 import PlacesPage from "./PlacesPage";
 import AccountNav from "../AccountNav";
-
+import MessagesPage from "./MessagesPage";
 
 const ProfilePage = () => {
   const [redirect, setRedirect] = useState(null);
@@ -31,14 +31,13 @@ const ProfilePage = () => {
   }
   //   console.log(ready, user);
 
-
   if (redirect) {
     return <Navigate to={redirect} />;
   }
 
   return (
     <div>
-            <AccountNav/>
+      <AccountNav />
       {subpage === "profile" && (
         <div className=" text-center max-w-lg mx-auto">
           Logged as {user.name} ({user.email})
@@ -51,6 +50,12 @@ const ProfilePage = () => {
       {subpage === "places" && (
         <div>
           <PlacesPage />
+        </div>
+      )}
+
+      {subpage === "messages" && (
+        <div>
+          <MessagesPage />
         </div>
       )}
     </div>

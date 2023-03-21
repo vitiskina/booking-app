@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { differenceInCalendarDays } from "date-fns";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 
 const BookingWidget = ({ place }) => {
@@ -11,13 +11,13 @@ const BookingWidget = ({ place }) => {
   const [phone, setPhone] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [redirect, setRedirect] = useState("");
-  const {user} = useContext(UserContext)
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
-    if(user){
-      setName(user.name)
+    if (user) {
+      setName(user.name);
     }
-  }, [user])
+  }, [user]);
 
   let numberOfNights = 0;
   if (checkIn && checkOut) {
@@ -100,13 +100,24 @@ const BookingWidget = ({ place }) => {
           </div>
         )}
       </div>
-
-      <button onClick={bookThisPlace} className="primary mt-4">
-        Book this place
-        {numberOfNights > 0 && (
-          <span>{" for $" + numberOfNights * place.price}</span>
+      <div className=" flex gap-4 justify-center">
+        {user && user._id !== place.owner && (
+          <div className="">
+            <Link to={`/account/messages/${place.owner}`}>
+              <button className="primary mt-4">Chat with owner</button>
+            </Link>
+          </div>
         )}
-      </button>
+
+        <div>
+          <button onClick={bookThisPlace} className="primary mt-4">
+            Book this place
+            {numberOfNights > 0 && (
+              <span>{" for $" + numberOfNights * place.price}</span>
+            )}
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

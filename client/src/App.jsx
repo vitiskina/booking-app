@@ -12,6 +12,8 @@ import PlacePage from "./pages/PlacePage";
 import BookingsPage from "./pages/BookingsPage";
 import BookingPage from "./pages/BookingPage";
 import SearchPage from "./pages/SearchPage";
+import MessagesPage from "./pages/MessagesPage";
+import MessagePage from "./pages/MessagePage";
 
 axios.defaults.baseURL = "http://127.0.0.1:4000";
 axios.defaults.withCredentials = true;
@@ -31,6 +33,8 @@ function App() {
           <Route path="/place/:id" element={<PlacePage />} />
           <Route path="/account/bookings" element={<BookingsPage />} />
           <Route path="/account/bookings/:id" element={<BookingPage />} />
+          <Route path="/account/messages" element={<MessagesPage />} />
+          <Route path="/account/messages/:id" element={<MessagePage />} />
           <Route path='/search' element={<SearchPage />} />
         </Route>
       </Routes>
