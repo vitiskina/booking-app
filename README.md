@@ -12,7 +12,9 @@
 - Create new place as owner
 - Can modify the place was created
 
-#How to run this project local:
+#Demo: Updating...
+
+#How to run this project local:<br/>
 /api 
 run node server : nodemon index.js
 
