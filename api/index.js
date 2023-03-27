@@ -279,7 +279,7 @@ app.post("/search", async (req, res) => {
 app.post("/messages", async (req, res) => {
   const userData = await getUserDataFromReq(req);
   const { message, receiver, sender } = req.body;
-  console.log(message, receiver, sender)
+  console.log(message, receiver, sender);
   Message.create({
     content: message,
     sender: userData.id,
@@ -293,7 +293,6 @@ app.post("/messages", async (req, res) => {
     });
 });
 
-
 app.get("/messages/:id", async (req, res) => {
   const userData = await getUserDataFromReq(req);
   const { id } = req.params;
@@ -306,6 +305,19 @@ app.get("/messages/:id", async (req, res) => {
   })
     .populate("sender", "name")
     .populate("receiver", "name")
+    .then((doc) => {
+      res.json(doc);
+    });
+});
+
+app.get("/messages", async (req, res) => {
+  const userData = await getUserDataFromReq(req);
+
+  Message.find({ sender: userData.id })
+    .sort({ createdAt: -1 })
+    .limit(1)
+    .populate("sender")
+    .populate("receiver")
     .then((doc) => {
       res.json(doc);
     });
